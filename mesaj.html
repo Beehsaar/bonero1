@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mesajlaşma</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .chat-header {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    .chat-header img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .chat-box {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      height: 400px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .chat-msg {
+      margin: 10px 0;
+      padding: 8px;
+      background: #e0f7fa;
+      border-radius: 5px;
+      max-width: 80%;
+    }
+    .chat-msg.self {
+      background: #c8e6c9;
+      text-align: right;
+      margin-left: auto;
+    }
+    textarea {
+      width: 100%;
+      height: 60px;
+      padding: 10px;
+      resize: none;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+      background: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-header">
+    <img id="receiverPhoto" src="" alt="Profil Foto">
+    <h2 id="chatWith">Mesajlaşılan Kişi</h2>
+  </div>
+
+  <div class="chat-box" id="chatBox"></div>
+
+  <textarea id="msgInput" placeholder="Mesajınızı yazın..."></textarea>
+  <button onclick="sendMessage()">Gönder</button>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const receiver = urlParams.get("alici");
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const chatKey = `chat_${currentUser.name}_${receiver}`;
+
+    document.getElementById("chatWith").textContent = `${receiver} ile sohbet`;
+
+    const receiverPhoto = document.getElementById("receiverPhoto");
+    if (receiver === "Ayşe Yıldız") {
+      receiverPhoto.src = "https://randomuser.me/api/portraits/women/1.jpg";
+    } else if (receiver === "Mehmet Korkmaz") {
+      receiverPhoto.src = "https://randomuser.me/api/portraits/men/2.jpg";
+    } else if (receiver === "Zeynep Demir") {
+      receiverPhoto.src = "https://randomuser.me/api/portraits/women/3.jpg";
+    } else {
+      receiverPhoto.src = "https://via.placeholder.com/80?text=Profil";
+    }
+
+    function loadMessages() {
+      const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
+      const chatBox = document.getElementById("chatBox");
+      chatBox.innerHTML = "";
+      messages.forEach(m => {
+        const div = document.createElement("div");
+        div.className = "chat-msg" + (m.sender === currentUser.name ? " self" : "");
+        div.textContent = m.sender + ": " + m.text;
+        chatBox.appendChild(div);
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function sendMessage() {
+      const text = document.getElementById("msgInput").value.trim();
+      if (!text) return;
+
+      const message = {
+        sender: currentUser.name,
+        text,
+        time: new Date().toLocaleTimeString()
+      };
+
+      const old = JSON.parse(localStorage.getItem(chatKey)) || [];
+      old.push(message);
+      localStorage.setItem(chatKey, JSON.stringify(old));
+      document.getElementById("msgInput").value = "";
+      loadMessages();
+    }
+
+    loadMessages();
+  </script>
+</body>
+</html>

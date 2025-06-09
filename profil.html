@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil Sayfası</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .user-info, .user-card {
+      background: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .user-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .user-card img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+    .user-card .info {
+      flex: 1;
+    }
+    button {
+      padding: 8px 12px;
+      background: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1976d2;
+    }
+  </style>
+</head>
+<body>
+  <div class="user-info" id="currentUserInfo">
+    <h2>Hoşgeldin!</h2>
+    <img id="profilePhoto" src="" alt="Profil Foto" style="width:80px;height:80px;border-radius:50%;display:block;margin:auto">
+    <p><strong>Ad:</strong> <span id="name"></span></p>
+    <p><strong>Şehir:</strong> <span id="city"></span></p>
+    <p><strong>Cinsiyet:</strong> <span id="gender"></span></p>
+    <p><strong>Boy:</strong> <span id="height"></span> cm</p>
+    <p><strong>Kilo:</strong> <span id="weight"></span> kg</p>
+  </div>
+
+  <h3>Diğer Kullanıcılar</h3>
+
+  <div class="user-card">
+    <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="">
+    <div class="info">
+      <p><strong>Ad:</strong> Ayşe Yıldız</p>
+      <p><strong>Şehir:</strong> İzmir</p>
+      <p><strong>Cinsiyet:</strong> Kadın</p>
+    </div>
+    <button onclick="sendMessage('Ayşe Yıldız')">Mesaj Gönder</button>
+  </div>
+
+  <div class="user-card">
+    <img src="https://randomuser.me/api/portraits/men/2.jpg" alt="">
+    <div class="info">
+      <p><strong>Ad:</strong> Mehmet Korkmaz</p>
+      <p><strong>Şehir:</strong> Ankara</p>
+      <p><strong>Cinsiyet:</strong> Erkek</p>
+    </div>
+    <button onclick="sendMessage('Mehmet Korkmaz')">Mesaj Gönder</button>
+  </div>
+
+  <div class="user-card">
+    <img src="https://randomuser.me/api/portraits/women/3.jpg" alt="">
+    <div class="info">
+      <p><strong>Ad:</strong> Zeynep Demir</p>
+      <p><strong>Şehir:</strong> İstanbul</p>
+      <p><strong>Cinsiyet:</strong> Kadın</p>
+    </div>
+    <button onclick="sendMessage('Zeynep Demir')">Mesaj Gönder</button>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("currentUser")) || {};
+    document.getElementById("name").textContent = user.name || "-";
+    document.getElementById("city").textContent = user.city || "-";
+    document.getElementById("gender").textContent = user.gender || "-";
+    document.getElementById("height").textContent = user.height || "-";
+    document.getElementById("weight").textContent = user.weight || "-";
+    if (user.photo) {
+      document.getElementById("profilePhoto").src = user.photo;
+    } else {
+      document.getElementById("profilePhoto").style.display = "none";
+    }
+
+    function sendMessage(receiver) {
+      window.location.href = `mesaj.html?alici=${encodeURIComponent(receiver)}`;
+    }
+  </script>
+</body>
+</html>
